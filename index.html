@@ -9,6 +9,10 @@
     <!-- button -->
     <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
     <!-- style -->
     <style>
         * {
@@ -20,6 +24,7 @@
         html,
         body {
             height: 100vh;
+            font-family: 'Press Start 2P', 'Noto Sans TC', sans-serif;
         }
 
         #wall {
@@ -28,6 +33,7 @@
             position: relative;
             background: url(./images/monsterinc.jpeg) no-repeat;
             background-size: 100% 100%;
+            overflow: hidden;
         }
 
         #game {
@@ -37,6 +43,7 @@
             top: 20%;
             left: 50%;
             transform: translateX(-50%);
+            /* border: 1px solid #333; */
         }
 
         #btn-start {
@@ -61,7 +68,8 @@
         #record p {
             display: inline-block;
             background: rgb(255, 255, 255, 0.7);
-            font-size: 16px;
+            font-size: 24px;
+            font-weight: 700;
             padding: 20px 30px;
         }
 
@@ -74,13 +82,83 @@
         }
 
         img {
-            width: 100px;
-            height: auto;
+            width: AUTO;
+            height: 170PX;
             position: absolute;
         }
 
         .trophy {
             top: 15px;
+        }
+
+        /* game info */
+        #mask {
+            height: 100vh;
+            background: #324973 url(./images/monstersinc2.jpg) no-repeat;
+            background-size: 100% 100%;
+            z-index: 9999;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 60px;
+            color: aliceblue;
+            text-shadow: 0 0 15px #222;
+            position: absolute;
+            left: 50%;
+            top: 30%;
+            transform: translateX(-50%);
+        }
+
+        #cross {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            position: absolute;
+            right: 20px;
+        }
+
+        .line {
+            width: 3px;
+            height: 23px;
+            background: #000;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+
+        }
+
+        .line:nth-child(2) {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(135deg);
+
+        }
+
+        #cross:hover {
+            background-color: #F56B05;
+        }
+
+        .info ul li {
+            list-style: none;
+            color: #F56B05;
+        }
+
+        .info div .row {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+        }
+
+        .info img {
+            width: auto;
+            height: 50px;
+            border: 1px solid #333;
+            display: block;
         }
     </style>
 </head>
@@ -95,16 +173,53 @@
         <button type="button" id="btn-start" class="nes-btn is-warning">Start</button>
         <!-- 紀錄 -->
         <div id="record">
-            <p>score <span id="text-score">0</span></p>
-            <p>countdown <span id="text-time">0</span> s</p>
+            <p>分數 <span id="text-score">0</span></p>
+            <p>倒數 <span id="text-time">0</span> s</p>
             <div id="high-player">
                 <!-- trophy -->
                 <i class="nes-icon trophy is-medium"></i>
-                <p>Player: <span id="highscore-player">---</span></p>
-                <p>score: <span id="highscore-score">--</span></p>
+                <p>玩家 <span id="highscore-player">-</span></p>
+                <p>最高分 <span id="highscore-score">-</span></p>
             </div>
         </div>
 
+        <!-- mask -->
+        <div id="mask">
+            <h1>送阿布回地球 好好長大</h1>
+            <div id="cross">
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <div class="info">
+                <h3>遊戲說明</h3>
+                <div>使用滑鼠點擊出現的怪獸電力公司腳色<br>
+                    每隻計分方式不同，如下圖說明<br>
+                    <ul>
+                        <li>加一分</li>
+                        <li>縮小一點</li>
+                        <li>減一秒</li>
+                    </ul>
+                    <div class="row">
+                        <img src="./images/girl2.png">
+                    </div>
+                    <div class="row">
+                        <img src="./images/girl3.png">
+                    </div>
+                    <div class="row">
+                        <img src="./images/girl1.png">
+                    </div>
+                    <div class="row">
+                        <img src="./images/sully.png">
+                    </div>
+                    <div class="row">
+                        <img src="./images/mike.png">
+                    </div>
+                    <div class="row">
+                        <img src="./images/randall.png">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- jq -->
@@ -123,8 +238,8 @@
         const highStorage = JSON.parse(localStorage.getItem('zab'))
         if (highStorage !== null) {
             highscore = highStorage
-            $('#highscore-player').text = highscore.name
-            $('#highscore-score').text = highscore.score
+            $('#highscore-player').text(`${highscore.name}`)
+            $('#highscore-score').text(`${highscore.score}`)
         }
 
         const move = (kid) => {
@@ -142,7 +257,7 @@
             // 重設
             score = 0
             $('#text-score').text(score)
-            countdown = 5
+            countdown = 15
             $('#text-time').text(countdown)
 
             timer = setInterval(() => {
@@ -152,24 +267,22 @@
 
                 // 隨機產生
                 let rand = Math.round(Math.random() * 20)
-                if (rand > 5 && $('#game img').length < 20) {
-                    const kid = $(`<img src="./images/girl2.png" style="bottom:${Math.round(Math.random() * 65)}%; left:${Math.round(Math.random() * 65)}%;">`)
-
-                    // const kid2 = $(`<img src="./images/girl3.png" style="bottom:${Math.round(Math.random() * 65)}%; left:${Math.round(Math.random() * 65)}%;">`)
+                if (rand > 3 && $('#game img').length < 20) {
+                    const kid = $(`<img src="./images/girl2.png" style="bottom:${Math.round(Math.random() * 70)}%; right:${Math.round(Math.random() * 65)}%;">`)
+                    const kid2 = $(`<img src="./images/girl3.png" style="bottom:${Math.round(Math.random() * 70)}%; left:${Math.round(Math.random() * 65)}%;">`)
 
                     $('#game').append(kid)
                     move(kid)
 
-                    // $('#game').append(kid2)
-                    // move(kid2)
+                    $('#game').append(kid2)
+                    move(kid2)
                 }
 
-                if (rand > 5 && $('#game img').length < 10) {
-                    const kid = $(`<img src="./images/girl1.png" style="bottom:${Math.round(Math.random() * 90)}%; left:${Math.round(Math.random() * 70)}%;">`)
-
-                    const monster = $(`<img src="./images/sully.png" style="bottom:${Math.round(Math.random() * 90)}%; left:${Math.round(Math.random() * 70)}%;">`)
-
-                    // const monster2 = $(`<img src="./images/mike.png" style="bottom:${Math.round(Math.random() * 90)}%; left:${Math.round(Math.random() * 70)}%;">`)
+                if (rand > 2 && $('#game img').length < 10) {
+                    const kid = $(`<img src="./images/girl1.png" style="top:${Math.round(Math.random() * 90)}%; left:${Math.round(Math.random() * 70)}%;">`)
+                    const monster = $(`<img src="./images/sully.png" style="bottom:${Math.round(Math.random() * 50)}%; right:${Math.round(Math.random() * 50)}%; height: 350px;">`)
+                    const monster2 = $(`<img src="./images/mike.png" style="top:${Math.round(Math.random() * 55)}%; left:${Math.round(Math.random() * 55)}%;; height: 220px;">`)
+                    const monster3 = $(`<img src="./images/randall.png" style="top:${Math.round(Math.random() * 55)}%; left:${Math.round(Math.random() * 55)}%;; height: 170px;">`)
 
                     $('#game').append(kid)
                     move(kid)
@@ -177,8 +290,11 @@
                     $('#game').append(monster)
                     move(monster)
 
-                    // $('#game').append(monster2)
-                    // move(monster2)
+                    $('#game').append(monster2)
+                    move(monster2)
+
+                    $('#game').append(monster3)
+                    move(monster3)
                 }
 
                 if (countdown <= 0) {
@@ -192,9 +308,7 @@
                     $(this).attr('disabled', false)
 
                     if (score > highscore.score) {
-
                         highscore.score = score
-                        // highscore.name = prompt('Please type Your Name')
                         Swal.fire({
                             title: 'Please type Your Name',
                             input: 'text',
@@ -204,11 +318,10 @@
                             } else {
                                 highscore.name = result.value
                             }
-                            $('#highscore-player').text = highscore.name
-                            $('#highscore-score').text = highscore.score
+                            $('#highscore-player').text(`${highscore.name}`)
+                            $('#highscore-score').text(`${score}`)
                             localStorage.setItem('zab', JSON.stringify(highscore))
                         })
-
                     }
                 }
 
@@ -224,6 +337,10 @@
                     '-webkit-user-drag': 'none',
                     'poiner-events': 'none'
                 })
+                $(this).animate({
+                    width: '50px',
+                    opacity: '0'
+                }, 'slow')
                 score += 2
                 $('#text-score').text(score)
 
@@ -233,6 +350,9 @@
                     'user-select': 'none',
                     '-webkit-user-drag': 'none',
                     'poiner-events': 'none'
+                })
+                $(this).animate({
+                    height: 'toggle'
                 })
                 score++
                 $('#text-score').text(score)
@@ -244,12 +364,40 @@
                     '-webkit-user-drag': 'none',
                     'poiner-events': 'none'
                 })
+                $(this).animate({
+                    height: '100px',
+                    opacity: '0'
+                }, 'fast')
                 score++
                 $('#text-score').text(score)
+            } else if ($(this).attr('src') == './images/sully.png') {
+                $(this).animate({
+                    height: '-=70px',
+                }, 'slow')
+                // score--
+                // $('#text-score').text(score)
+            } else if ($(this).attr('src') == './images/mike.png') {
+                $(this).animate({
+                    height: '-=70px',
+                }, 'slow')
+                // score--
+                // $('#text-score').text(score)
+            } else if ($(this).attr('src') == './images/randall.png') {
+                $(this).animate({
+                    height: '+=40px',
+                }, 'fast')
+                countdown--
+                $('#text-time').text(countdown)
             }
 
         })
 
+        // mask 關起來
+        $('#cross').on('click', function () {
+            $('#mask').css({
+                display: "none"
+            })
+        })
     </script>
 </body>
 

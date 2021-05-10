@@ -83,7 +83,7 @@
 
         img {
             width: AUTO;
-            height: 170PX;
+            height: 170px;
             position: absolute;
         }
 
@@ -94,70 +94,79 @@
         /* game info */
         #mask {
             height: 100vh;
-            background: #324973 url(./images/monstersinc2.jpg) no-repeat;
+            background: #324973 url(./images/monstersinc3.jpg) no-repeat;
             background-size: 100% 100%;
             z-index: 9999;
             position: relative;
         }
 
+        .info {
+            color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 65%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            font-weight: 100;
+        }
+
         h1 {
-            font-size: 60px;
+            font-size: 52px;
             color: aliceblue;
             text-shadow: 0 0 15px #222;
             position: absolute;
-            left: 50%;
-            top: 30%;
+            right: 20%;
+            top: 12%;
             transform: translateX(-50%);
         }
 
         #cross {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #333;
+            width: 80px;
+            height: 80px;
+            /* border: 3px solid #333; */
             border-radius: 50%;
             position: absolute;
-            right: 20px;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .line {
-            width: 3px;
-            height: 23px;
-            background: #000;
+            width: 5px;
+            height: 40px;
+            background: #FFF;
             position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) rotate(45deg);
+            left: 56%;
+            top: 65%;
+            transform: translate(-50%, -50%) rotate(50deg);
 
         }
 
         .line:nth-child(2) {
             position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) rotate(135deg);
+            /* left: 50%; */
+            top: 37%;
+            transform: translate(-50%, -50%) rotate(130deg);
 
         }
 
         #cross:hover {
-            background-color: #F56B05;
-        }
-
-        .info ul li {
-            list-style: none;
-            color: #F56B05;
+            background-color: rgb(255, 255, 255, 0.3);
         }
 
         .info div .row {
             display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 1px solid #ccc;
+            width: 80px;
+            height: 100px;
+            margin-top: 20px;
+            margin-bottom: 40px;
         }
 
         .info img {
             width: auto;
-            height: 50px;
-            border: 1px solid #333;
+            height: 100px;
             display: block;
         }
     </style>
@@ -185,29 +194,34 @@
 
         <!-- mask -->
         <div id="mask">
-            <h1>送阿布回地球 好好長大</h1>
+            <h1>送阿布回地球</h1>
             <div id="cross">
                 <div class="line"></div>
                 <div class="line"></div>
             </div>
             <div class="info">
+                <!-- <h1>送阿布回地球</h1> -->
+
                 <h3>遊戲說明</h3>
-                <div>使用滑鼠點擊出現的怪獸電力公司腳色<br>
-                    每隻計分方式不同，如下圖說明<br>
-                    <ul>
-                        <li>加一分</li>
-                        <li>縮小一點</li>
-                        <li>減一秒</li>
-                    </ul>
+                <div class="infoA">
+                    遊戲時間共20秒
+                    點擊隨機出現的小女孩阿布<br>
+                    ★ 點到穿怪獸裝的小女孩加兩分<br>
+                    ★ 戴安全帽的和正常裝扮的小女孩加一分<br>
+                    <div class="row">
+                        <img src="./images/girl1.png">
+                    </div>
                     <div class="row">
                         <img src="./images/girl2.png">
                     </div>
                     <div class="row">
                         <img src="./images/girl3.png">
                     </div>
-                    <div class="row">
-                        <img src="./images/girl1.png">
-                    </div>
+                </div>
+                <div class="infoB">
+                    點到怪獸的計分方式 <br>
+                    ★ 毛怪、大眼仔每點一次，體積就縮小一次 <br>
+                    ★ 點到藍道則會扣一秒，體積則變大 <br>
                     <div class="row">
                         <img src="./images/sully.png">
                     </div>
@@ -257,7 +271,7 @@
             // 重設
             score = 0
             $('#text-score').text(score)
-            countdown = 15
+            countdown = 20
             $('#text-time').text(countdown)
 
             timer = setInterval(() => {
